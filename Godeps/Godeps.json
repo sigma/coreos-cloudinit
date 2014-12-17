@@ -23,8 +23,36 @@
 			"Rev": "55d41c3e21e1593b944c06196ffb2ac57ab7f653"
 		},
 		{
+			"ImportPath": "github.com/golang/glog",
+			"Rev": "44145f04b68cf362d9c4df2182967c2275eaefed"
+		},
+		{
 			"ImportPath": "github.com/guelfey/go.dbus",
 			"Rev": "f6a3a2366cc39b8479cadc499d3c735fb10fbdda"
+		},
+		{
+			"ImportPath": "github.com/sigma/vmw-guestinfo/bridge",
+			"Rev": "1966cbb2f1af9ecbf6868d02b34feb7f2cb06ae1"
+		},
+		{
+			"ImportPath": "github.com/sigma/vmw-guestinfo/message",
+			"Rev": "1966cbb2f1af9ecbf6868d02b34feb7f2cb06ae1"
+		},
+		{
+			"ImportPath": "github.com/sigma/vmw-guestinfo/rpcout",
+			"Rev": "1966cbb2f1af9ecbf6868d02b34feb7f2cb06ae1"
+		},
+		{
+			"ImportPath": "github.com/sigma/vmw-guestinfo/rpcvmx",
+			"Rev": "1966cbb2f1af9ecbf6868d02b34feb7f2cb06ae1"
+		},
+		{
+			"ImportPath": "github.com/sigma/vmw-guestinfo/vmcheck",
+			"Rev": "1966cbb2f1af9ecbf6868d02b34feb7f2cb06ae1"
+		},
+		{
+			"ImportPath": "github.com/sigma/vmw-ovflib",
+			"Rev": "ec99805f21474f1bfd339fe1836a394b5f684056"
 		},
 		{
 			"ImportPath": "github.com/tarm/goserial",
