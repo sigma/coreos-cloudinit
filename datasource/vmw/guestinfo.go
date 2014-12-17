@@ -26,9 +26,16 @@ func readVariable(var_name string, ovf_env *ovf.OvfEnvironment) (string, bool) {
 }
 
 func readUrlBody(url string) []byte {
-	resp, _ := http.Get(url)
+	resp, err := http.Get(url)
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return make([]byte, 0)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return make([]byte, 0)
+	}
 	return body
 }
 
