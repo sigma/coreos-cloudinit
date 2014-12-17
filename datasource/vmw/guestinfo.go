@@ -1,7 +1,6 @@
 package vmw
 
 import (
-	"errors"
 	"io/ioutil"
 	"net/http"
 
@@ -92,23 +91,11 @@ func (gi *guestInfo) ConfigRoot() string {
 }
 
 func (gi *guestInfo) FetchMetadata() ([]byte, error) {
-	var err error
-	if len(gi.meta_data) == 0 {
-		err = errors.New("No metadata")
-	} else {
-		err = nil
-	}
-	return gi.meta_data, err
+	return gi.meta_data, nil
 }
 
 func (gi *guestInfo) FetchUserdata() ([]byte, error) {
-	var err error
-	if len(gi.user_data) == 0 {
-		err = errors.New("No metadata")
-	} else {
-		err = nil
-	}
-	return gi.user_data, err
+	return gi.user_data, nil
 }
 
 func (gi *guestInfo) FetchNetworkConfig(filename string) ([]byte, error) {
