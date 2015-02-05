@@ -1,5 +1,4 @@
 From: Yann Hodique <hodiquey@vmware.com>
-Subject: [PATCH] t/feature/ovfenv
+Subject: [PATCH] t/release/vmw
 
-add support for reading configuration from ovfenv
-
+patched version for VMware environment
