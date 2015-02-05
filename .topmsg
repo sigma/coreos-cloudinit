@@ -1,0 +1,5 @@
+From: Yann Hodique <hodiquey@vmware.com>
+Subject: [PATCH] t/feature/ovfenv
+
+add support for reading configuration from ovfenv
+
