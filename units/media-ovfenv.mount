@@ -1,6 +1,6 @@
 [Unit]
-Wants=user-ovfenv.service
-Before=user-ovfenv.service
+Wants=user-config-ovfenv.service
+Before=user-config-ovfenv.service
 # Only mount ovfenv drive block devices automatically in virtual machines
 ConditionVirtualization=|vm
 
