@@ -1,0 +1,10 @@
+[Unit]
+Wants=user-ovfenv.service
+Before=user-ovfenv.service
+# Only mount ovfenv drive block devices automatically in virtual machines
+ConditionVirtualization=|vm
+
+[Mount]
+What=LABEL="OVF ENV"
+Where=/media/ovfenv
+Options=ro

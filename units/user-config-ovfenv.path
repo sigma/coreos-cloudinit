@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch for an ovfenv at /media/ovfenv
+
+# Note: This unit is essentially just here as a fall-back mechanism to
+# trigger cloudinit if it isn't triggered explicitly by other means
+# such as by a Wants= in the mount unit. This ensures we handle the
+# case where /media/ovfenv is provided to a CoreOS container.
+
+[Path]
+DirectoryNotEmpty=/media/ovfenv

@@ -11,3 +11,9 @@ After=user-cloudinit@var-lib-coreos\x2dinstall-user_data.path
 
 Requires=user-cloudinit-proc-cmdline.service
 After=user-cloudinit-proc-cmdline.service
+
+Requires=user-config-vmw-tools.service
+After=user-config-vmw-tools.service
+
+Requires=user-config-ovfenv.service
+After=user-config-ovfenv.service
