@@ -26,6 +26,7 @@ declare -a TESTPKGS=(
 	datasource/proc_cmdline
 	datasource/url
 	datasource/waagent
+	datasource/vmw
 	initialize
 	network
 	pkg
