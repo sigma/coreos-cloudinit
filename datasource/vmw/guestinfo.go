@@ -2,6 +2,7 @@ package vmw
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-guestinfo/rpcvmx"
@@ -10,13 +11,14 @@ import (
 )
 
 type guestInfo struct {
-	user_data []byte
-	meta_data []byte
+	env       *ovf.OvfEnvironment
+	varReader func(string, *ovf.OvfEnvironment) (string, bool)
+	urlReader func(string) []byte
 }
 
 func readVariable(var_name string, ovf_env *ovf.OvfEnvironment) (string, bool) {
 	if val, ok := ovf_env.Properties["guestinfo."+var_name]; ok {
-		return val, ok
+		return val, ok && val != ""
 	} else if vmcheck.IsVirtualWorld() {
 		val := rpcvmx.ConfigGetString(var_name, "")
 		return val, val != ""
@@ -25,14 +27,17 @@ func readVariable(var_name string, ovf_env *ovf.OvfEnvironment) (string, bool) {
 }
 
 func readUrlBody(url string) []byte {
+	log.Printf("Reading from url %s\n", url)
 	resp, err := http.Get(url)
 	if err != nil {
+		log.Println("Url unavailable")
 		return make([]byte, 0)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		log.Println("Error reading response body")
 		return make([]byte, 0)
 	}
 	return body
@@ -40,12 +45,13 @@ func readUrlBody(url string) []byte {
 
 func NewDatasource(filename string) *guestInfo {
 	var ovf_env []byte
-	gi := &guestInfo{}
 
 	if filename == "" {
 		if vmcheck.IsVirtualWorld() {
+			log.Println("Trying to read from VMware backdoor")
 			ovf_env = []byte(rpcvmx.ConfigGetString("ovfenv", ""))
 		} else {
+			log.Println("Not in a VMware world, giving up")
 			ovf_env = make([]byte, 0)
 		}
 	} else {
@@ -61,25 +67,21 @@ func NewDatasource(filename string) *guestInfo {
 		env = ovf.ReadEnvironment(ovf_env)
 	}
 
-	val, ok := readVariable("user_data.doc", env)
-	if ok {
-		gi.user_data = []byte(val)
-	} else if val, ok = readVariable("user_data.url", env); ok {
-		gi.user_data = readUrlBody(val)
-	}
-
-	val, ok = readVariable("meta_data.doc", env)
-	if ok {
-		gi.user_data = []byte(val)
-	} else if val, ok = readVariable("meta_data.url", env); ok {
-		gi.meta_data = readUrlBody(val)
-	}
-
-	return gi
+	return &guestInfo{env, readVariable, readUrlBody}
 }
 
 func (gi *guestInfo) IsAvailable() bool {
-	return len(gi.user_data) != 0 || len(gi.meta_data) != 0
+	vars := []string{
+		"user_data.doc", "user_data.url",
+		"meta_data.doc", "meta_data.url"}
+	for _, v := range vars {
+		_, ok := readVariable(v, gi.env)
+		if ok {
+			return true
+		}
+	}
+	log.Println("vmw-guestinfo datasource is not available")
+	return false
 }
 
 func (gi *guestInfo) AvailabilityChanges() bool {
@@ -90,12 +92,26 @@ func (gi *guestInfo) ConfigRoot() string {
 	return ""
 }
 
+func (gi *guestInfo) fetchData(key string) ([]byte, error) {
+	val, ok := readVariable(key+".doc", gi.env)
+	if ok {
+		log.Println("Direct document available")
+		return []byte(val), nil
+	} else if val, ok = readVariable(key+".url", gi.env); ok {
+		log.Println("Url available")
+		return readUrlBody(val), nil
+	}
+	return make([]byte, 0), nil
+}
+
 func (gi *guestInfo) FetchMetadata() ([]byte, error) {
-	return gi.meta_data, nil
+	log.Println("Reading metadata")
+	return gi.fetchData("meta_data")
 }
 
 func (gi *guestInfo) FetchUserdata() ([]byte, error) {
-	return gi.user_data, nil
+	log.Println("Reading user data")
+	return gi.fetchData("user_data")
 }
 
 func (gi *guestInfo) FetchNetworkConfig(filename string) ([]byte, error) {
