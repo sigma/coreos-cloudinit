@@ -24,6 +24,7 @@ declare -a TESTPKGS=(
 	datasource/metadata/digitalocean
 	datasource/metadata/ec2
 	datasource/proc_cmdline
+	datasource/test
 	datasource/url
 	datasource/waagent
 	datasource/vmw
@@ -34,7 +35,7 @@ declare -a TESTPKGS=(
 )
 
 if [ -z "$PKG" ]; then
-	GOFMTPATH="${TESTPKGS[*]} coreos-cloudinit.go"
+	GOFMTPATH="${TESTPKGS[*]} *.go"
 	# prepend repo path to each package
 	TESTPKGS="${TESTPKGS[*]/#/${REPO_PATH}/} ./"
 else

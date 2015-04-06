@@ -120,6 +120,7 @@ Environment="FLANNELD_ETCD_PREFIX=/coreos.com/network2"
 ```
 
 List of flannel configuration parameters:
+
 - **etcd_endpoints**: Comma separated list of etcd endpoints
 - **etcd_cafile**: Path to CA file used for TLS communication with etcd
 - **etcd_certfile**: Path to certificate file used for TLS communication with etcd
@@ -151,7 +152,7 @@ coreos:
 Environment="LOCKSMITHD_ENDPOINT=example.com:4001"
 ```
 
-For the complete list of locksmith configuraion parameters, see the [locksmith documentation][locksmith-readme].
+For the complete list of locksmith configuration parameters, see the [locksmith documentation][locksmith-readme].
 
 [locksmith-readme]: https://github.com/coreos/locksmith/blob/master/README.md
 
@@ -167,8 +168,11 @@ The `reboot-strategy` parameter also affects the behaviour of [locksmith](https:
   - _etcd-lock_: Reboot after first taking a distributed lock in etcd, this guarantees that only one host will reboot concurrently and that the cluster will remain available during the update.
   - _best-effort_ - If etcd is running, "etcd-lock", otherwise simply "reboot".
   - _off_ - Disable rebooting after updates are applied (not recommended).
-- **server**: is the omaha endpoint URL which will be queried for updates.
+- **server**: The location of the [CoreUpdate][coreupdate] server which will be queried for updates. Also known as the [omaha][omaha-docs] server endpoint.
 - **group**:  signifies the channel which should be used for automatic updates.  This value defaults to the version of the image initially downloaded. (one of "master", "alpha", "beta", "stable")
+
+[coreupdate]: https://coreos.com/products/coreupdate
+[omaha-docs]: https://coreos.com/docs/coreupdate/custom-apps/coreupdate-protocol/
 
 *Note: cloudinit will only manipulate the locksmith unit file in the systemd runtime directory (`/run/systemd/system/locksmithd.service`). If any manual modifications are made to an overriding unit configuration file (e.g. `/etc/systemd/system/locksmithd.service`), cloudinit will no longer be able to control the locksmith service unit.*
 
@@ -290,8 +294,8 @@ All but the `passwd` and `ssh-authorized-keys` fields will be ignored if the use
 - **groups**: Add user to these additional groups
 - **no-user-group**: Boolean. Skip default group creation.
 - **ssh-authorized-keys**: List of public SSH keys to authorize for this user
-- **coreos-ssh-import-github**: Authorize SSH keys from Github user
-- **coreos-ssh-import-github-users**: Authorize SSH keys from a list of Github users
+- **coreos-ssh-import-github**: Authorize SSH keys from GitHub user
+- **coreos-ssh-import-github-users**: Authorize SSH keys from a list of GitHub users
 - **coreos-ssh-import-url**: Authorize SSH keys imported from a url endpoint.
 - **system**: Create the user as a system user. No home directory will be created.
 - **no-log-init**: Boolean. Skip initialization of lastlog and faillog databases.
