@@ -8,6 +8,8 @@ import (
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-guestinfo/rpcvmx"
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-guestinfo/vmcheck"
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-ovflib"
+
+	"github.com/coreos/coreos-cloudinit/datasource"
 )
 
 type guestInfo struct {
@@ -104,9 +106,11 @@ func (gi *guestInfo) fetchData(key string) ([]byte, error) {
 	return make([]byte, 0), nil
 }
 
-func (gi *guestInfo) FetchMetadata() ([]byte, error) {
+func (gi *guestInfo) FetchMetadata() (metadata datasource.Metadata, err error) {
 	log.Println("Reading metadata")
-	return gi.fetchData("meta_data")
+	log.Println(" not implemented")
+	return
+	// return gi.fetchData("meta_data")
 }
 
 func (gi *guestInfo) FetchUserdata() ([]byte, error) {
