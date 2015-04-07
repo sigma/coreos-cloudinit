@@ -3,19 +3,17 @@ package vmw
 import (
 	"io/ioutil"
 	"log"
-	"net/http"
 
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-guestinfo/rpcvmx"
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-guestinfo/vmcheck"
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-ovflib"
 
 	"github.com/coreos/coreos-cloudinit/datasource"
+	"github.com/coreos/coreos-cloudinit/pkg"
 )
 
 type guestInfo struct {
-	env       *ovf.OvfEnvironment
-	varReader func(string, *ovf.OvfEnvironment) (string, bool)
-	urlReader func(string) []byte
+	env *ovf.OvfEnvironment
 }
 
 func readVariable(var_name string, ovf_env *ovf.OvfEnvironment) (string, bool) {
@@ -26,23 +24,6 @@ func readVariable(var_name string, ovf_env *ovf.OvfEnvironment) (string, bool) {
 		return val, val != ""
 	}
 	return "", false
-}
-
-func readUrlBody(url string) []byte {
-	log.Printf("Reading from url %s\n", url)
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Println("Url unavailable")
-		return make([]byte, 0)
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("Error reading response body")
-		return make([]byte, 0)
-	}
-	return body
 }
 
 func NewDatasource(filename string) *guestInfo {
@@ -69,7 +50,7 @@ func NewDatasource(filename string) *guestInfo {
 		env = ovf.ReadEnvironment(ovf_env)
 	}
 
-	return &guestInfo{env, readVariable, readUrlBody}
+	return &guestInfo{env}
 }
 
 func (gi *guestInfo) IsAvailable() bool {
@@ -101,7 +82,12 @@ func (gi *guestInfo) fetchData(key string) ([]byte, error) {
 		return []byte(val), nil
 	} else if val, ok = readVariable(key+".url", gi.env); ok {
 		log.Println("Url available")
-		return readUrlBody(val), nil
+		client := pkg.NewHttpClient()
+		cfg, err := client.GetRetry(val)
+		if err != nil {
+			return nil, err
+		}
+		return cfg, nil
 	}
 	return make([]byte, 0), nil
 }
