@@ -20,8 +20,8 @@ func readVariable(var_name string, ovf_env *ovf.OvfEnvironment) (string, bool) {
 	if val, ok := ovf_env.Properties["guestinfo."+var_name]; ok {
 		return val, ok && val != ""
 	} else if vmcheck.IsVirtualWorld() {
-		val := rpcvmx.ConfigGetString(var_name, "")
-		return val, val != ""
+		val, err := rpcvmx.ConfigGetString(var_name, "")
+		return val, err == nil
 	}
 	return "", false
 }
@@ -32,7 +32,8 @@ func NewDatasource(filename string) *guestInfo {
 	if filename == "" {
 		if vmcheck.IsVirtualWorld() {
 			log.Println("Trying to read from VMware backdoor")
-			ovf_env = []byte(rpcvmx.ConfigGetString("ovfenv", ""))
+			ovf_env_str, _ := rpcvmx.ConfigGetString("ovfenv", "")
+			ovf_env = []byte(ovf_env_str)
 		} else {
 			log.Println("Not in a VMware world, giving up")
 			ovf_env = make([]byte, 0)
