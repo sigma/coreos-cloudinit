@@ -77,7 +77,7 @@ func (gi *guestInfo) ConfigRoot() string {
 
 func (gi *guestInfo) fetchData(key string) ([]byte, error) {
 	val, ok := readVariable(key+".doc", gi.env)
-	if ok {
+	if ok && len(val) != 0 {
 		log.Println("Direct document available")
 		return []byte(val), nil
 	} else if val, ok = readVariable(key+".url", gi.env); ok {
