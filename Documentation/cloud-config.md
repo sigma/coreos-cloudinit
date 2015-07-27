@@ -76,14 +76,16 @@ _Note: The `$private_ipv4` and `$public_ipv4` substitution variables referenced 
 #### etcd2
 
 The `coreos.etcd2.*` parameters will be translated to a partial systemd unit acting as an etcd configuration file.
-If the platform environment supports the templating feature of coreos-cloudinit it is possible to automate etcd configuration with the `$private_ipv4` and `$public_ipv4` fields. For example, the following cloud-config document...
+If the platform environment supports the templating feature of coreos-cloudinit it is possible to automate etcd configuration with the `$private_ipv4` and `$public_ipv4` fields. When generating a [discovery token](https://discovery.etcd.io/new?size=3), set the `size` parameter, since etcd uses this to determine if all members have joined the cluster. After the cluster is bootstrapped, it can grow or shrink from this configured size.
+
+For example, the following cloud-config document...
 
 ```yaml
 #cloud-config
 
 coreos:
   etcd2:
-    # generate a new token for each unique cluster from https://discovery.etcd.io/new
+    # generate a new token for each unique cluster from https://discovery.etcd.io/new?size=3
     discovery: https://discovery.etcd.io/<token>
     # multi-region and multi-cloud deployments need to use $public_ipv4
     advertise-client-urls: http://$public_ipv4:2379
@@ -102,7 +104,7 @@ Environment="ETCD_DISCOVERY=https://discovery.etcd.io/<token>"
 Environment="ETCD_ADVERTISE_CLIENT_URLS=http://203.0.113.29:2379"
 Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=http://192.0.2.13:2380"
 Environment="ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379,http://0.0.0.0:4001"
-Environment="ETCD_LISTEN_PEERS_URLS=http://192.0.2.13:2380,http://192.0.2.13:7001"
+Environment="ETCD_LISTEN_PEER_URLS=http://192.0.2.13:2380,http://192.0.2.13:7001"
 ```
 
 For more information about the available configuration parameters, see the [etcd documentation][etcd-config].
@@ -332,9 +334,9 @@ All but the `passwd` and `ssh-authorized-keys` fields will be ignored if the use
 - **groups**: Add user to these additional groups
 - **no-user-group**: Boolean. Skip default group creation.
 - **ssh-authorized-keys**: List of public SSH keys to authorize for this user
-- **coreos-ssh-import-github**: Authorize SSH keys from GitHub user
-- **coreos-ssh-import-github-users**: Authorize SSH keys from a list of GitHub users
-- **coreos-ssh-import-url**: Authorize SSH keys imported from a url endpoint.
+- **coreos-ssh-import-github** [DEPRECATED]: Authorize SSH keys from GitHub user
+- **coreos-ssh-import-github-users** [DEPRECATED]: Authorize SSH keys from a list of GitHub users
+- **coreos-ssh-import-url** [DEPRECATED]: Authorize SSH keys imported from a url endpoint.
 - **system**: Create the user as a system user. No home directory will be created.
 - **no-log-init**: Boolean. Skip initialization of lastlog and faillog databases.
 - **shell**: User's login shell.
@@ -379,43 +381,6 @@ perl -e 'print crypt("password","\$6\$SALT\$") . "\n"'
 ```
 
 Using a higher number of rounds will help create more secure passwords, but given enough time, password hashes can be reversed.  On most RPM based distributions there is a tool called mkpasswd available in the `expect` package, but this does not handle "rounds" nor advanced hashing algorithms. 
-
-#### Retrieving SSH Authorized Keys
-
-##### From a GitHub User
-
-Using the `coreos-ssh-import-github` field, we can import public SSH keys from a GitHub user to use as authorized keys to a server.
-
-```yaml
-#cloud-config
-
-users:
-  - name: elroy
-    coreos-ssh-import-github: elroy
-```
-
-##### From an HTTP Endpoint
-
-We can also pull public SSH keys from any HTTP endpoint which matches [GitHub's API response format](https://developer.github.com/v3/users/keys/#list-public-keys-for-a-user).
-For example, if you have an installation of GitHub Enterprise, you can provide a complete URL with an authentication token:
-
-```yaml
-#cloud-config
-
-users:
-  - name: elroy
-    coreos-ssh-import-url: https://github-enterprise.example.com/api/v3/users/elroy/keys?access_token=<TOKEN>
-```
-
-You can also specify any URL whose response matches the JSON format for public keys:
-
-```yaml
-#cloud-config
-
-users:
-  - name: elroy
-    coreos-ssh-import-url: https://example.com/public-keys
-```
 
 ### write_files
 
