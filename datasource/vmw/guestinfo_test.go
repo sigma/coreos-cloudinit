@@ -27,7 +27,7 @@ var data_vapprun = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 
 func TestAvailable(t *testing.T) {
 	env := ovf.ReadEnvironment(data_vapprun)
-	gi := guestInfo{env, readVariable, readUrlBody}
+	gi := guestInfo{env}
 
 	if !gi.IsAvailable() {
 		t.Fatal("vmw-guestinfo datasource is unavailable")
