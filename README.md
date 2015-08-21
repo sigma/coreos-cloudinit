@@ -1,4 +1,4 @@
-# coreos-cloudinit [![Build Status](https://travis-ci.org/coreos/coreos-cloudinit.png?branch=master)](https://travis-ci.org/coreos/coreos-cloudinit)
+# coreos-cloudinit [![Build Status](https://codeship.com/projects/edd789b0-2a50-0133-dbf9-164db879e713/status?branch=t/feature/vmw-init)]
 
 coreos-cloudinit enables a user to customize CoreOS machines by providing either a cloud-config document or an executable script through user-data.
 
