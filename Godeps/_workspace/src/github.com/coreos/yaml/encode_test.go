@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coreos/yaml"
+	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/coreos/yaml"
 	. "gopkg.in/check.v1"
 )
 
