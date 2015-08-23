@@ -18,10 +18,8 @@ var dataVapprun = []byte(`<?xml version="1.0" encoding="UTF-8"?>
       <Locale>en_US</Locale>
    </PlatformSection>
    <PropertySection>
-      <Property oe:key="guestinfo.user_data.url" oe:value="https://gist.githubusercontent.com/sigma/5a64aac1693da9ca70d2/raw/plop.yaml"/>
-      <Property oe:key="guestinfo.user_data.doc" oe:value=""/>
-      <Property oe:key="guestinfo.meta_data.url" oe:value=""/>
-      <Property oe:key="guestinfo.meta_data.doc" oe:value=""/>
+      <Property oe:key="guestinfo.user_data" oe:value="https://gist.githubusercontent.com/sigma/5a64aac1693da9ca70d2/raw/plop.yaml"/>
+      <Property oe:key="guestinfo.meta_data" oe:value=""/>
    </PropertySection>
 </Environment>`)
 

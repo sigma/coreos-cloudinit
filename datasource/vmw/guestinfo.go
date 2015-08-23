@@ -3,6 +3,7 @@ package vmw
 import (
 	"io/ioutil"
 	"log"
+	"net/url"
 
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-guestinfo/rpcvmx"
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-guestinfo/vmcheck"
@@ -56,9 +57,7 @@ func NewDatasource(filename string) datasource.Datasource {
 }
 
 func (gi *guestInfo) IsAvailable() bool {
-	vars := []string{
-		"user_data.doc", "user_data.url",
-		"meta_data.doc", "meta_data.url"}
+	vars := []string{"user_data", "meta_data"}
 	for _, v := range vars {
 		_, ok := readVariable(v, gi.env)
 		if ok {
@@ -78,12 +77,15 @@ func (gi *guestInfo) ConfigRoot() string {
 }
 
 func (gi *guestInfo) fetchData(key string) ([]byte, error) {
-	val, ok := readVariable(key+".doc", gi.env)
+	val, ok := readVariable(key, gi.env)
+
 	if ok && len(val) != 0 {
-		log.Println("Direct document available")
-		return []byte(val), nil
-	} else if val, ok = readVariable(key+".url", gi.env); ok {
-		log.Println("Url available")
+		log.Println("Data available for", key)
+
+		_, err := url.Parse(string(val))
+		if err != nil {
+			return []byte(val), nil
+		}
 		client := pkg.NewHttpClient()
 		cfg, err := client.GetRetry(val)
 		if err != nil {
