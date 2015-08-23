@@ -32,23 +32,23 @@
 		},
 		{
 			"ImportPath": "github.com/sigma/vmw-guestinfo/bridge",
-			"Rev": "c036b3e8a5c2736a7b1ab6eb8a52d18a87779820"
+			"Rev": "78fb6b902b22a9f8788073e1fd9cfa82c42d2231"
 		},
 		{
 			"ImportPath": "github.com/sigma/vmw-guestinfo/message",
-			"Rev": "c036b3e8a5c2736a7b1ab6eb8a52d18a87779820"
+			"Rev": "78fb6b902b22a9f8788073e1fd9cfa82c42d2231"
 		},
 		{
 			"ImportPath": "github.com/sigma/vmw-guestinfo/rpcout",
-			"Rev": "c036b3e8a5c2736a7b1ab6eb8a52d18a87779820"
+			"Rev": "78fb6b902b22a9f8788073e1fd9cfa82c42d2231"
 		},
 		{
 			"ImportPath": "github.com/sigma/vmw-guestinfo/rpcvmx",
-			"Rev": "c036b3e8a5c2736a7b1ab6eb8a52d18a87779820"
+			"Rev": "78fb6b902b22a9f8788073e1fd9cfa82c42d2231"
 		},
 		{
 			"ImportPath": "github.com/sigma/vmw-guestinfo/vmcheck",
-			"Rev": "c036b3e8a5c2736a7b1ab6eb8a52d18a87779820"
+			"Rev": "78fb6b902b22a9f8788073e1fd9cfa82c42d2231"
 		},
 		{
 			"ImportPath": "github.com/sigma/vmw-ovflib",

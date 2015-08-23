@@ -6,7 +6,7 @@ import (
 	"github.com/coreos/coreos-cloudinit/Godeps/_workspace/src/github.com/sigma/vmw-ovflib"
 )
 
-var data_vapprun = []byte(`<?xml version="1.0" encoding="UTF-8"?>
+var dataVapprun = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 <Environment xmlns="http://schemas.dmtf.org/ovf/environment/1"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns:oe="http://schemas.dmtf.org/ovf/environment/1"
@@ -26,7 +26,7 @@ var data_vapprun = []byte(`<?xml version="1.0" encoding="UTF-8"?>
 </Environment>`)
 
 func TestAvailable(t *testing.T) {
-	env := ovf.ReadEnvironment(data_vapprun)
+	env := ovf.ReadEnvironment(dataVapprun)
 	gi := guestInfo{env}
 
 	if !gi.IsAvailable() {

@@ -16,39 +16,40 @@ type guestInfo struct {
 	env *ovf.OvfEnvironment
 }
 
-func readVariable(var_name string, ovf_env *ovf.OvfEnvironment) (string, bool) {
-	if val, ok := ovf_env.Properties["guestinfo."+var_name]; ok {
+func readVariable(varName string, ovfEnv *ovf.OvfEnvironment) (string, bool) {
+	if val, ok := ovfEnv.Properties["guestinfo."+varName]; ok {
 		return val, ok && val != ""
 	} else if vmcheck.IsVirtualWorld() {
-		val, err := rpcvmx.ConfigGetString(var_name, "")
+		val, err := rpcvmx.NewConfig().GetString(varName, "")
 		return val, err == nil
 	}
 	return "", false
 }
 
-func NewDatasource(filename string) *guestInfo {
-	var ovf_env []byte
+// NewDatasource initializes the VMware way of accessing configuration information
+func NewDatasource(filename string) datasource.Datasource {
+	var ovfEnv []byte
 
 	if filename == "" {
 		if vmcheck.IsVirtualWorld() {
 			log.Println("Trying to read from VMware backdoor")
-			ovf_env_str, _ := rpcvmx.ConfigGetString("ovfenv", "")
-			ovf_env = []byte(ovf_env_str)
+			ovfEnvStr, _ := rpcvmx.NewConfig().GetString("ovfenv", "")
+			ovfEnv = []byte(ovfEnvStr)
 		} else {
 			log.Println("Not in a VMware world, giving up")
-			ovf_env = make([]byte, 0)
+			ovfEnv = make([]byte, 0)
 		}
 	} else {
 		var err error
-		ovf_env, err = ioutil.ReadFile(filename)
+		ovfEnv, err = ioutil.ReadFile(filename)
 		if err != nil {
-			ovf_env = make([]byte, 0)
+			ovfEnv = make([]byte, 0)
 		}
 	}
 
 	env := &ovf.OvfEnvironment{}
-	if len(ovf_env) != 0 {
-		env = ovf.ReadEnvironment(ovf_env)
+	if len(ovfEnv) != 0 {
+		env = ovf.ReadEnvironment(ovfEnv)
 	}
 
 	return &guestInfo{env}
