@@ -23,10 +23,6 @@
 			"Rev": "55d41c3e21e1593b944c06196ffb2ac57ab7f653"
 		},
 		{
-			"ImportPath": "github.com/golang/glog",
-			"Rev": "44145f04b68cf362d9c4df2182967c2275eaefed"
-		},
-		{
 			"ImportPath": "github.com/guelfey/go.dbus",
 			"Rev": "f6a3a2366cc39b8479cadc499d3c735fb10fbdda"
 		},
